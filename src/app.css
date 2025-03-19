@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+.input_primary {
+  padding: 10px 20px;
+  font-size: 16px;
+  min-width: 28rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_half {
+  padding: 10px 20px;
+  font-size: 16px;
+  min-width: 14rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_third_half {
+  padding: 10px 20px;
+  font-size: 16px;
+  min-width: 4rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_for_earnings_and_deductions{
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 13rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input_primary:focus, .input_half:focus, .input_for_earnings_and_deductions:focus {
+  border-color: #4caf50;
+  background-color: #e8f5e9;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+}
+
+.input_half:focus::placeholder {
+  color: #4caf50;
+}
+
+.input_half::placeholder {
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.primary_btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #c53076;
+  color: white;
+}
+
+.primary_btn:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.primary_btn_delete {
+  background-color: transparent;
+  border: 2px solid #e53e3e;
+  border-radius: 8px;
+  width: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.primary_btn_delete:hover {
+  background-color: #e53e3e;
+  border-color: #c53030;
+}
+
+.primary_btn_delete svg {
+  color: #e53e3e;
+  transition: color 0.3s;
+}
+
+.primary_btn_delete:hover svg {
+  color: #fff;
+}
