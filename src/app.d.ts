@@ -12,7 +12,6 @@ declare global {
 			company_logo:File;
 			company_name:string;
 			company_address: string | null;
-			company_pincode: string | null;
 		}
 
 		interface Add_More{
@@ -34,13 +33,21 @@ declare global {
 			company_details: Company_Detail;
 			employee_pay_summary:Employee_Pay_Summary;
 			earnings: Add_More[];
+			total_earnings: number | null;
 			deductions: Add_More[];
+			total_deductions: number | null;
 			net_payable: number | null;
+			currency: string | null
 			note: string | null;
 			signature:string;
 			upload_signature: File;
 		}
 	}
+	declare module 'number-to-words' {
+		export function toWords(num: number): string;
+	}
+	
 }
 
 export {};
+

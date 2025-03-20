@@ -1,71 +1,91 @@
 @import "tailwindcss";
 
-.input_primary {
+@layer base {
+  :root {
+    --color-primary: #c53076;
+    --color-delete: #e53e3e;
+    --background-main: #f9f9f9;
+    --color-focus: #4caf50;
+    --color-focus-bg: #e8f5e9;
+    --color-focus-shadow: rgba(76, 175, 80, 0.4);
+    --color-placeholder: #999;
+    --siderbar-background: rgb(20, 15, 15);
+    --border-color: #ccc; /* Added border color variable */
+
+    --heading-one-title-size: 2rem;
+    --heading-one-title-font-weight: 700;
+  }
+}
+
+.heading-one{
+  font-size: var(--heading-one-title-size);
+  font-weight: var(--heading-one-title-font-weight);
+}
+
+.sidebar{
+  height: 100vh;
+  background-color: var(--siderbar-background);
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.input_primary, .input_half, .input_third_half, .input_for_earnings_and_deductions {
   padding: 10px 20px;
   font-size: 16px;
-  min-width: 28rem;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+  border: 1px solid var(--border-color); /* Use the border-color variable here */
+  background-color: var(--background-main);
   outline: none;
   transition: all 0.3s ease;
+}
+
+.input_primary {
+  min-width: 28rem;
 }
 
 .input_half {
-  padding: 10px 20px;
-  font-size: 16px;
   min-width: 14rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  outline: none;
-  transition: all 0.3s ease;
 }
 
 .input_third_half {
-  padding: 10px 20px;
-  font-size: 16px;
   min-width: 4rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: all 0.3s ease;
 }
 
-.input_for_earnings_and_deductions{
-  padding: 10px 20px;
-  font-size: 16px;
+.input_for_earnings_and_deductions {
   width: 13rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: all 0.3s ease;
 }
 
-.input_primary:focus, .input_half:focus, .input_for_earnings_and_deductions:focus {
-  border-color: #4caf50;
-  background-color: #e8f5e9;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+.input_primary:focus, 
+.input_half:focus, 
+.input_for_earnings_and_deductions:focus {
+  border-color: var(--color-focus);
+  background-color: var(--color-focus-bg);
+  box-shadow: 0 0 10px var(--color-focus-shadow);
 }
 
 .input_half:focus::placeholder {
-  color: #4caf50;
+  color: var(--color-focus);
 }
 
 .input_half::placeholder {
-  color: #999;
+  color: var(--color-placeholder);
   transition: color 0.3s ease;
 }
 
 .primary_btn {
-  padding: 10px 20px;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 0.1rem;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: #c53076;
+  background-color: var(--color-primary);
   color: white;
+  font-weight: 700;
 }
 
 .primary_btn:hover {
@@ -75,7 +95,7 @@
 
 .primary_btn_delete {
   background-color: transparent;
-  border: 2px solid #e53e3e;
+  border: 2px solid var(--color-delete);
   border-radius: 8px;
   width: 3rem;
   display: flex;
@@ -86,15 +106,46 @@
 }
 
 .primary_btn_delete:hover {
-  background-color: #e53e3e;
+  background-color: var(--color-delete);
   border-color: #c53030;
 }
 
 .primary_btn_delete svg {
-  color: #e53e3e;
+  color: var(--color-delete);
   transition: color 0.3s;
 }
 
 .primary_btn_delete:hover svg {
-  color: #fff;
+  color: white;
+}
+
+.highlight {
+  background-color: rgb(253, 227, 247);
+}
+
+.textarea_primary {
+  padding: 10px 20px;
+  font-size: 16px;
+  min-width: 28rem;
+  min-height: 8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color); /* Use the border-color variable here */
+  background-color: var(--background-main);
+  outline: none;
+  transition: all 0.3s ease;
+  resize: vertical; /* Allows resizing only vertically */
+}
+
+.textarea_primary:focus {
+  border-color: var(--color-focus);
+  background-color: var(--color-focus-bg);
+  box-shadow: 0 0 10px var(--color-focus-shadow);
+}
+
+.textarea_primary::placeholder {
+  color: var(--color-placeholder);
+}
+
+.textarea_primary:focus::placeholder {
+  color: var(--color-focus);
 }
