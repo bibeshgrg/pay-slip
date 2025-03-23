@@ -2,18 +2,51 @@
 
 @layer base {
   :root {
-    --color-primary: #c53076;
-    --color-delete: #e53e3e;
+    --color-primary: #3A2EC9;
+    --hover--color-primary: #4A44C6;
+    --highlight-color: #E8E6FC;
+    
+    --color-delete: #B91C1C;
     --background-main: #f9f9f9;
+    --color-muted: #8d8d8d;
     --color-focus: #4caf50;
     --color-focus-bg: #e8f5e9;
     --color-focus-shadow: rgba(76, 175, 80, 0.4);
     --color-placeholder: #999;
     --siderbar-background: rgb(20, 15, 15);
     --border-color: #ccc; /* Added border color variable */
-
     --heading-one-title-size: 2rem;
     --heading-one-title-font-weight: 700;
+
+    /* Spacing for the container and between each toast */
+    --svoast-offset: 16px;
+    --svoast-gap: 16px;
+
+    /* The toast itself. */
+    --svoast-bg: #333;
+    --svoast-text: #fff;
+    --svoast-padding: 10px 15px 10px 18px;
+    --svoast-radius: 4px;
+    --svoast-shadow: 0 2px 7px hsl(0 0% 0% / 0.25);
+    --svoast-font-size: 14px;
+    --svoast-dismiss-gap: 8px;
+    --svoast-max-width: unset;
+
+    /* The current colour of the toast, depending on the type */
+    --svoast-colour: '';
+
+    /* Colour for each type */
+    --svoast-info-colour: #888;
+    --svoast-attention-colour: #38bdf8;
+    --svoast-success-colour: #4ade80;
+    --svoast-warning-colour: #fb923c;
+    --svoast-error-colour: #ef4444;
+
+    /* The coloured bar */
+    --svoast-bar-width: 3px;
+
+    /* Icons */
+    --svoast-icon-padding: 2px;
   }
 }
 
@@ -22,13 +55,6 @@
   font-weight: var(--heading-one-title-font-weight);
 }
 
-.sidebar{
-  height: 100vh;
-  background-color: var(--siderbar-background);
-  color: white;
-  display: flex;
-  flex-direction: column;
-}
 
 .input_primary, .input_half, .input_third_half, .input_for_earnings_and_deductions {
   padding: 10px 20px;
@@ -89,6 +115,7 @@
 }
 
 .primary_btn:hover {
+  background-color: var(--hover--color-primary);
   transform: scale(1.05);
   transition: all 0.3s ease;
 }
@@ -120,7 +147,7 @@
 }
 
 .highlight {
-  background-color: rgb(253, 227, 247);
+  background-color: var(--highlight-color);
 }
 
 .textarea_primary {
@@ -149,3 +176,39 @@
 .textarea_primary:focus::placeholder {
   color: var(--color-focus);
 }
+
+.sidebar{
+  height: 100vh;
+  background-color: var(--siderbar-background);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  width: 22rem;
+}
+
+/* Hide the default scrollbar track */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+  cursor: pointer;
+}
+
+/* Make the scrollbar background transparent */
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Style the scrollbar thumb */
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* Light transparent color */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Hide scrollbar in Firefox */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+

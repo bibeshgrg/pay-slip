@@ -1,18 +1,44 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import SiderBar from '../components/SiderBar.svelte';
-  
+    import { authStore } from '../stores/authStore.js';
+    import { browser } from '$app/environment';
+    import { Toasts } from 'svoast';
+
     let { children } = $props();
-  </script>
+
+    onMount(() => {
+    const unsubscribe = authStore.subscribe(({ currentUser, isLoading }) => {
+        if (!browser || isLoading) return;
+
+        if (!currentUser && window.location.pathname !== '/login') {
+            window.location.href = '/login';
+            console.log('Redirecting to /login');
+        }
+
+        if (currentUser && window.location.pathname === '/login') {
+            window.location.href = '/';
+            console.log('Redirecting to /');
+        }
+    });
+
+    return () => {
+        unsubscribe();
+    };
+});
+</script>
   
-  <div class="flex flex-row w-full h-full relative">
-      <!-- Sticky Sidebar -->
-      <nav class="sticky top-0 w-64 h-full">
-          <SiderBar />
-      </nav>
-  
-      <!-- Main content area -->
-      <div class="flex-1 h-full">
-          {@render children()}
-      </div>
-  </div>
-  
+
+<Toasts position="top-center" />
+<div class="flex flex-row w-full h-full">
+
+    <!-- Sticky Sidebar -->
+    <nav class="sticky top-0 h-full">
+        <SiderBar />
+    </nav>
+
+    <!-- Main content area -->
+    <div class="flex h-full w-full">
+        {@render children()}
+    </div>
+</div>

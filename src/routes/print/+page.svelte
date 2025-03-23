@@ -129,15 +129,15 @@
                 </div>
 
                 <!-- Add More -->
-                {#each $form_data.employee_pay_summary.add_more || [] as addMore, addIndex (addIndex)}
+                {#each $form_data.employee_pay_summary.additional_data || [] as addMore, addIndex (addIndex)}
                 <div class="flex flex-col">
                   <div class="flex flex-row justify-between space-x-1">
                     <div class="flex flex-col relative">
-                      <input bind:value={$form_data.employee_pay_summary.add_more[addIndex].name} placeholder="Name" class="input_half" />
+                      <input bind:value={$form_data.employee_pay_summary.additional_data[addIndex].name} placeholder="Name" class="input_half" />
                       <span id="error_message_employee" class=""></span>
                     </div>
                     <div class="flex flex-col relative">
-                      <input bind:value={$form_data.employee_pay_summary.add_more[addIndex].value} placeholder="Value" class="input_half" />
+                      <input bind:value={$form_data.employee_pay_summary.additional_data[addIndex].value} placeholder="Value" class="input_half" />
                       <span id="error_message_employee" class=""></span>
                     </div>
                   </div>
@@ -166,10 +166,10 @@
                             {#each $form_data.earnings as earnings, index}
                                 <tr class="">
                                     <td class="">
-                                        <span>{earnings.name}</span>
+                                        <span>{earnings.type}</span>
                                     </td>
                                     <td class="">
-                                        <span class="text-right">{earnings.value}</span>
+                                        <span class="text-right">{earnings.amount}</span>
                                     </td>
                                 </tr>
                             {/each}
@@ -196,10 +196,10 @@
                             {#each $form_data.deductions as deductions, index}
                                 <tr class="">
                                     <td class="">
-                                        <span>{deductions.name}</span>
+                                        <span>{deductions.type}</span>
                                     </td>
                                     <td class="">
-                                        <span class="text-right">{deductions.value}</span>
+                                        <span class="text-right">{deductions.amount}</span>
                                     </td>
                                 </tr>
                             {/each}

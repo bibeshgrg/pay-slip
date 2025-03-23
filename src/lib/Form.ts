@@ -1,15 +1,16 @@
-import { get, writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { z } from 'zod';
 
-// Function to format the date (adjust the format as needed)
+// Function to format the date
 function formatDate(date: number): string {
   const d = new Date(date);
   const year = d.getFullYear();
-  const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero
-  const day = d.getDate().toString().padStart(2, '0'); // Add leading zero
+  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const day = d.getDate().toString().padStart(2, '0'); 
   return `${year}-${month}-${day}`;
 }
 
+// Form stores
 export const signature_img = writable('');
 export const company_logo_img = writable('');
 
@@ -27,18 +28,18 @@ export const form_data = writable<Form>({
     paid_days: 0,
     loss_of_pay_days: 0,
     pay_date: "",
-    add_more: []
+    additional_data: [],
   },
   earnings: [
-    { name: 'Basic', value: 0 },
-    { name: 'HRA', value: 0 },
-    { name: 'Incentive', value: 0 }
+    { type: 'Basic', amount: 0 },
+    { type: 'HRA', amount: 0 },
+    { type: 'Incentive', amount: 0 }
   ],
   total_earnings: 0,
   deductions: [
-    { name: 'Income Tax', value: 0 },
-    { name: 'Provident Fund', value: 0 },
-    { name: 'Unpaid Leaves', value: 0 }
+    { type: 'Income Tax', amount: 0 },
+    { type: 'Provident Fund', amount: 0 },
+    { type: 'Unpaid Leaves', amount: 0 }
   ],
   total_deductions: 0,
   net_payable: null,
@@ -48,12 +49,22 @@ export const form_data = writable<Form>({
   upload_signature: null
 });
 
+
+// Zod schema for form data
 const earningOrDeductionSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  value: z.number().min(0, { message: 'Value must be at least 0' }),
+  type: z.string().min(1, { message: 'Type is required' }),
+  amount: z.number().min(0, { message: 'Amount must be at least 0' }),
 });
 
-// Zod schema for the form data
+// Zod schema for "add more" data
+const additionalDataSchema = z.array(
+  z.object({
+    name: z.string().min(1, { message: 'Name is required' }),
+    value: z.string().min(1, { message: 'Value is required' }),
+  })
+);
+
+// Zod schema for form data
 export const formDataSchema = z.object({
   company_details: z.object({
     company_logo: z.instanceof(File).nullable().optional(),
@@ -67,10 +78,7 @@ export const formDataSchema = z.object({
     paid_days: z.number().min(1, { message: 'Paid Days is required and must be greater than 0' }),
     loss_of_pay_days: z.number().min(0, { message: 'Loss of pay days cannot be negative' }),
     pay_date: z.string().optional(),
-    add_more: z.array(z.object({
-      name: z.string().min(1, { message: 'Name is required' }),
-      value: z.string().min(1, { message: 'Value is required' }),
-    })).default([]),
+    additional_data: additionalDataSchema.default([]),
   }),
   earnings: z.array(earningOrDeductionSchema).min(1, { message: 'At least one earning must be defined' }),
   total_earnings: z.number().min(0, { message: 'Total earnings cannot be negative' }),
@@ -86,6 +94,7 @@ export const formDataSchema = z.object({
 // Type derived from the form data schema
 export type Form = z.infer<typeof formDataSchema>;
 
+// Validation errors store
 export const formErrors = writable({
   company_name: '',
   company_address: '',
@@ -94,8 +103,9 @@ export const formErrors = writable({
   pay_period: '',
   paid_days: '',
   loss_of_pay_days: '',
-  earnings: [] as { name: string; value: string }[],  // Add errors for earnings items
-  deductions: [] as { name: string; value: string }[],  // Add errors for deductions items
+  pay_date: '',
+  earnings: [] as { type: string; amount: string }[], 
+  deductions: [] as { type: string; amount: string }[], 
   total_earnings: '',
   total_deductions: '',
   net_payable: '',
@@ -103,24 +113,16 @@ export const formErrors = writable({
   currency: '',
   signature: '',
   upload_signature: '',
-  add_more: [] as { name: string; value: string }[] // Store error messages for Add More items
+  additional_data: [] as { name: string; value: string }[], 
 });
 
-
-
-// Function to validate form data
+// Validate form function
 export async function validateForm() {
-  // Perform validation using Zod
   const data = get(form_data);
   const validation = formDataSchema.safeParse(data);
 
   if (!validation.success) {
-    console.log('Validation errors:', validation.error.format()); // Debugging step
-
-    // Extract errors from Zod result
     const errors = validation.error.format();
-
-    // Update the error store with error messages
     formErrors.set({
       company_name: errors.company_details?.company_name?._errors?.[0] || '',
       company_address: errors.company_details?.company_address?._errors?.[0] || '',
@@ -129,13 +131,14 @@ export async function validateForm() {
       pay_period: errors.employee_pay_summary?.pay_period?._errors?.[0] || '',
       paid_days: errors.employee_pay_summary?.paid_days?._errors?.[0] || '',
       loss_of_pay_days: errors.employee_pay_summary?.loss_of_pay_days?._errors?.[0] || '',
+      pay_date: errors.employee_pay_summary?.pay_date?._errors?.[0] || '',
       earnings: data.earnings.map((_, index) => ({
-        name: errors.earnings?.[index]?.name?._errors?.[0] || '',
-        value: errors.earnings?.[index]?.value?._errors?.[0] || '',
+        type: errors.earnings?.[index]?.type?._errors?.[0] || '',
+        amount: errors.earnings?.[index]?.amount?._errors?.[0] || '',
       })),
       deductions: data.deductions.map((_, index) => ({
-        name: errors.deductions?.[index]?.name?._errors?.[0] || '',
-        value: errors.deductions?.[index]?.value?._errors?.[0] || '',
+        type: errors.deductions?.[index]?.type?._errors?.[0] || '',
+        amount: errors.deductions?.[index]?.amount?._errors?.[0] || '',
       })),
       total_earnings: errors.total_earnings?._errors?.[0] || '',
       total_deductions: errors.total_deductions?._errors?.[0] || '',
@@ -144,10 +147,9 @@ export async function validateForm() {
       currency: errors.currency?._errors?.[0] || '',
       signature: errors.signature?._errors?.[0] || '',
       upload_signature: errors.upload_signature?._errors?.[0] || '',
-      // Adding errors for add_more
-      add_more: data.employee_pay_summary.add_more.map((_, index) => ({
-        name: errors.employee_pay_summary?.add_more?.[index]?.name?._errors?.[0] || '',
-        value: errors.employee_pay_summary?.add_more?.[index]?.value?._errors?.[0] || '',
+      additional_data: data.employee_pay_summary.additional_data.map((_, index) => ({
+        name: errors.employee_pay_summary?.additional_data?.[index]?.name?._errors?.[0] || '',
+        value: errors.employee_pay_summary?.additional_data?.[index]?.value?._errors?.[0] || '',
       })),
     });
 
@@ -158,20 +160,16 @@ export async function validateForm() {
   return true;
 }
 
-
-
-// Derived store to calculate total earnings
+// Derived stores to calculate total earnings and deductions
 export const totalEarnings = derived(form_data, ($form_data) =>
-  $form_data.earnings.reduce((sum, item) => sum + item.value, 0)
+  $form_data.earnings.reduce((sum, item) => sum + item.amount, 0)
 );
 
-// Derived store to calculate total deductions
 export const totalDeductions = derived(form_data, ($form_data) =>
-  $form_data.deductions.reduce((sum, item) => sum + item.value, 0)
+  $form_data.deductions.reduce((sum, item) => sum + item.amount, 0)
 );
 
 // Derived store to calculate net payable amount
-
 export const netPayable = derived(
   [totalEarnings, totalDeductions],
   ([$totalEarnings, $totalDeductions]) => $totalEarnings - $totalDeductions
